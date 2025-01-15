@@ -12,5 +12,8 @@ export default {
   plugins: [
     daisyUi
   ],
+  daisyui: {
+    themes: ["corporate", "light", "dark"],
+  },
 }
 

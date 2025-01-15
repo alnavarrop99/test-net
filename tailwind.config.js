@@ -13,7 +13,7 @@ export default {
     daisyUi
   ],
   daisyui: {
-    themes: ["corporate", "light", "dark"],
+    themes: ["light", "dark"],
   },
 }
 

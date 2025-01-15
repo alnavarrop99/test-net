@@ -38,7 +38,7 @@ export const Card = ({ bordered, padding, layout, glass, className, ...props }: 
   return  <div {...props} className={cn(cardProps({ bordered, padding, layout, glass }), className)} />
 };
 
-const titleProps = cva('card-title');
+const titleProps = cva('card-title text-3xl');
 export const CardTitle = ({ className, ...props }: React.ComponentPropsWithRef<'h2'>) => <h2 {...props} className={cn(titleProps(), className)} />
 
 const actionProps = cva('card-actions justify-end');

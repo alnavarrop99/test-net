@@ -1,6 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import App, { loader as AppLoader } from '~/routes/calendar'
+import App from '~/routes/app'
+import Calendar, { loader as CalendarLoader, action as CalendarAction } from '~/routes/calendar'
+import Detail  from '~/routes/calendar/:detail'
 import Home from '~/routes/home'
 import Login from '~/routes/auth/login'
 import Sigin from '~/routes/auth/sigin'
@@ -16,14 +18,17 @@ function Router() {
         { path: 'sigin', element: <Sigin /> },
         { index: true, element: <Login /> },
       ] },
-      { index: true, element: <App />, loader: AppLoader },
-      { index: true, element: <Home /> },
-      { path: 'users', children: [
+      { path: '', element: <App />, children: [
+        { index: true, element: <Calendar />, loader: CalendarLoader, action: CalendarAction },
+        { path: ':detail', element: <Detail /> },
+        { path: 'users', children: [
         { index: true, element: <Users /> },
         { path: 'create', element: <UserCreate /> },
         { path: 'update', element: <UserUpdate /> },
         { path: 'remove', action: UserRemove },
       ] }
+      ] },
+      { index: true, element: <Home /> },
     ])}  />
   )
 }

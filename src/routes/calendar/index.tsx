@@ -1,6 +1,6 @@
-import { Form, LoaderFunctionArgs, useLoaderData } from "react-router-dom";
+import { ActionFunctionArgs, Form, LoaderFunctionArgs, useActionData, useLoaderData } from "react-router-dom";
 import { CalendarGroup, CalendarGroupItem } from "./calendar";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Button, Pagination, PaginationNext, PaginationPrev, Link } from "~/comp";
 
 export const loader = ({ request }: LoaderFunctionArgs) => {
@@ -30,6 +30,7 @@ export const loader = ({ request }: LoaderFunctionArgs) => {
 
 export default function Layouts () {
   const { q } = useLoaderData<typeof loader>()
+  const res = useActionData<typeof action>()
 
   const date = useMemo( () => {
     const current = new Date()
@@ -57,17 +58,26 @@ export default function Layouts () {
 
   const plus = useCallback(( currentMonth: number ) => {
     return currentMonth + 1
-  }, [currentYear])
+  }, [])
 
   const minus = useCallback(( currentMonth: number ) => {
     return currentMonth - 1
-  }, [currentYear])
+  }, [])
 
-  return <Form className="grid items-streetch h-[100dvh] p-32 grid-rows-[min-content,1fr]">
+  const onSelected = useCallback(( ev: React.FormEvent<React.ComponentRef<typeof Form>> ) => {
+    const tg = ev.target as React.ComponentRef<typeof CalendarGroupItem>
+    const value = tg.value
+    if(!value || Number.isNaN(+value)) return;
+    setSelectedDate(+value)
+  }, [])
+
+  const [selectedDate, setSelectedDate] = useState<number>(currentDate)
+
+  return <Form className="container mx-auto grid items-streetch h-full p-32 grid-rows-[min-content,1fr]" onChange={onSelected}>
     <div className="text-5xl flex justify-between">
       <h1>{distributionMonth[currentMonth as keyof typeof distributionDays]}, {currentYear}</h1>
       <div className="space-x-4">
-        <Link to='' color='neutral' className="text-lg">Ver detalles</Link>
+        <Link to={`${selectedDate}`} color='neutral' className="text-lg">Ver detalles</Link>
         <Button type="submit" color='neutral'>Agregar evento</Button>
         <Pagination>
           <PaginationPrev name="month" value={`${minus(currentMonth)}`} color='neutral' />
@@ -93,6 +103,15 @@ export default function Layouts () {
     </main>
   </Form>
 }
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const form = await request.formData()
+  const day = Array.from(form.values())?.at(-1)
+
+  return {
+    selectedDay: day as string
+  }
+} 
 
 const distributionDays = {
   0: 'Lunes',

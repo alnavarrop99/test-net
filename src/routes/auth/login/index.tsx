@@ -2,7 +2,7 @@ import { Form } from "react-router-dom";
 import { Button, Card, CardAction, CardBody, CardTitle, Input, Label } from "~/comp";
 
 export default function Login () {
-  return <section className="h-[100dvh] grid place-items-center">
+  return <section className="h-full grid place-items-center">
     <Card className="min-w-[32rem]">
       <CardBody>
         <CardTitle>Login</CardTitle>
